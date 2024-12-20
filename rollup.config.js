@@ -26,5 +26,20 @@ export default defineConfig([
       name: 'background'
     },
     plugins: [resolve(), typescript()]
+  },
+  {
+    input: 'popup/popup.ts',
+    output: {
+      file: 'dist/popup.js',
+      format: 'iife',
+      name: 'popup'
+    },
+    plugins: [
+      resolve(),
+      typescript({
+        noEmit: false,
+        tsconfig: './tsconfig.json'
+      })
+    ]
   }
 ])

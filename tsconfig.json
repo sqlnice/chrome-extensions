@@ -16,5 +16,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["chrome"]
   },
-  "include": ["scripts"]
+  "include": ["scripts", "popup"]
 } 
