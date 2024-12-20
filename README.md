@@ -1,53 +1,121 @@
-# Chrome 自动跳转插件
+# 网页助手
 
-### 使用方法
+一个提供多种网页辅助功能的 Chrome 扩展。
 
-- 克隆`代码仓库`到本地
-<pre>git clone https://github.com/sqlnice/auto-goto-url.git</pre>
+## 功能列表
 
-- 打开 `Chrome 扩展程序页面`
-<pre>chrome://extensions/</pre>
+### 1. 自动跳转
+- 自动跳过各大网站的中间跳转页面
+- 可在弹窗中开启/关闭此功能
+- 支持的网站：
+  - 微博 (t.cn、weibo.cn)
+  - 知乎
+  - 简书
+  - 豆瓣
+  - CSDN
+  - Steam
+  - 开源中国
+  - 微信开发者社区
+  - 腾讯文档
+  - Pixiv
+  - QQ
+  - 语雀
+  - 掘金
+  - 贴吧
+  - ZAKER
+  - QQ邮箱
+  - Gitee
+  - InfoQ
+  - 力扣
 
-- 打开右上角 `开发者模式`
+### 2. 地图搜索
+- 选中文字后右键可在百度地图中搜索
+- 在新标签页打开搜索结果
+- 可在弹窗中开启/关闭此功能
+- 支持快捷键操作
 
-- 点击 `加载已解压的扩展程序`, 选择文件夹即可
+## 项目结构
 
-### 已支持列表
+```
+project/
+├── manifest.json            # 扩展配置文件
+├── popup/                   # 弹出窗口
+│   ├── index.html          # 弹窗页面
+│   ├── style.css           # 弹窗样式
+│   └── popup.ts            # 弹窗逻辑
+├── scripts/
+│   ├── content.ts          # 内容脚本
+│   ├── background.ts       # 后台脚本
+│   └── features/           # 功能模块目录
+│       ├── base.ts         # 功能基类
+│       ├── autoRedirect/   # 自动跳转功能
+│       │   ├── index.ts    # 功能实现
+│       │   └── rules.ts    # 跳转规则配置
+│       └── mapSearch/      # 地图搜索功能
+│           └── index.ts    # 功能实现
+├── lib/                    # 公共库
+│   └── utils.ts            # 工具函数
+├── dist/                   # 构建输出目录
+│   ├── content.js          # 打包后的内容脚本
+│   └── background.js       # 打包后的后台脚本
+└── build.js                # 构建脚本
+```
 
-- <img width="32px" src="https://weibo.com/favicon.ico" alt="微博" > [微博](https://weibo.com)
+## 开发说明
 
-- <img width="32px" src="https://cdn2.jianshu.io/assets/favicons/favicon-e743bfb1821442341c3ab15bdbe804f7ad97676bd07a770ccc9483473aa76f06.ico" alt="简书" > [简书](https://www.jianshu.com/)
+### 功能模块化
+- 每个功能都继承自 `Feature` 基类
+- 配置与逻辑分离
+- 便于维护和扩展
 
-- <img width="32px" src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎" > [知乎](https://www.zhihu.com/)
+### 添加新功能
+1. 在 `features` 目录下创建新功能目录
+2. 实现功能类（继承 `Feature`）
+3. 根据功能类型在相应文件中注册：
+   - 网页交互功能 → `content.js`
+   - Chrome API 功能 → `background.js`
+4. 运行 `node build.js` 构建项目
+5. 重新加载扩展
 
-- <img width="32px" src="https://img3.doubanio.com/favicon.ico" alt="豆瓣" > [豆瓣](https://www.douban.com/)
+### 开发流程
+1. 修改源代码（`scripts/`、`lib/` 目录下的文件）
+2. 运行构建命令：
+   ```bash
+   node build.js
+   ```
+3. 在 Chrome 扩展管理页面点击"重新加载"图标
+4. 测试功能
 
-- <img width="32px" src="https://g.csdnimg.cn/static/logo/favicon32.ico" alt="CSDN" > [CSDN](https://www.csdn.net/)
+## 使用方法
 
-- <img width="32px" src="https://store.steampowered.com/favicon.ico" alt="Steam" > [Steam](https://store.steampowered.com/)
+1. 克隆仓库到本地
+```bash
+git clone https://github.com/sqlnice/chrome-extensions.git
+```
 
-- <img width="32px" src="https://cn-assets.gitee.com/assets/favicon-9007bd527d8a7851c8330e783151df58.ico" alt="开源中国" > [开源中国](https://www.oschina.net/)
+2. 安装依赖
+```bash
+pnpm install
+```
 
-- <img width="32px" src="https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico" alt="微信" > [微信](https://weixin.qq.com/)
+3. 构建项目
+```bash
+pnpm build
+```
 
-- <img width="32px" src="https://docs.gtimg.com/desktop/favicon2.ico" alt="腾讯文档" > [腾讯文档](https://docs.qq.com/desktop)
+4. 打开 Chrome 扩展程序页面
+```
+chrome://extensions/
+```
 
-- <img width="32px" src="https://www.pixiv.net/favicon.ico" alt="pixiv" > [pixiv](https://www.pixiv.net/)
+5. 开启开发者模式
 
-- <img width="32px" src="https://qzonestyle.gtimg.cn/qzone/qzact/act/external/tiqq/logo.png" alt="QQ" > [QQ](https://im.qq.com/index)
+6. 点击"加载已解压的扩展程序"，选择项目目录
 
-- <img width="32px" src="https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png" alt="语雀" > [语雀](https://www.yuque.com/)
+## 功能配置
 
-- <img width="32px" src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web//static/favicons/favicon-32x32.png" alt="掘金" > [掘金]()
+所有功能都可以在扩展的弹出窗口中开启或关闭：
 
-- <img width="32px" src="https://www.baidu.com/favicon.ico" alt="贴吧" > [贴吧](https://tieba.baidu.com/index.html)
-
-- <img width="32px" src="https://www.myzaker.com/favicon.ico" alt="ZAKER" > [ZAKER](https://www.myzaker.com/)
-
-- <img width="32px" src="https://mail.qq.com/zh_CN/htmledition/images/favicon/qqmail_favicon_32h.png" alt="QQ 邮箱" > [QQ 邮箱](https://mail.qq.com/)
-
-- <img width="32px" src="https://cn-assets.gitee.com/assets/favicon-9007bd527d8a7851c8330e783151df58.ico" alt="Gitee" > [Gitee](https://gitee.com/)
-
-- <img width="32px" src="https://static001.infoq.cn/static/infoq/favicon/favicon-32x32.png" alt="InfoQ" > [InfoQ](https://xie.infoq.cn/)
-
-- <img width="32px" src="https://leetcode.cn/favicon.ico" alt="力扣" > [力扣](https://leetcode.cn/)
+1. 点击 Chrome 工具栏中的扩展图标
+2. 使用开关来控制各项功能
+3. 设置会自动保存并同步

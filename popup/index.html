@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>网页助手</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>网页助手</h1>
+        <span class="version">v0.2</span>
+      </div>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-header">
+            <h3>自动跳转</h3>
+            <label class="switch">
+              <input type="checkbox" id="autoRedirect" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p>自动跳过各大网站的中间跳转页面</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-header">
+            <h3>地图搜索</h3>
+            <label class="switch">
+              <input type="checkbox" id="mapSearch" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p>选中文字后右键可在百度地图中搜索</p>
+        </div>
+      </div>
+    </div>
+    <script src="popup.ts"></script>
+  </body>
+</html>
