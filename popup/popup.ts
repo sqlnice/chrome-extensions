@@ -1,31 +1,20 @@
+const FEATURE_IDS = ['autoRedirect', 'mapSearch', 'tiebaDark', 'escBack'] as const
+
 document.addEventListener('DOMContentLoaded', async () => {
   // 获取所有功能的开关状态
-  const features = await chrome.storage.sync.get(['autoRedirect', 'mapSearch'])
+  const states = await chrome.storage.sync.get([...FEATURE_IDS])
 
-  // 自动跳转功能
-  const autoRedirectSwitch = document.getElementById('autoRedirect') as HTMLInputElement
-  autoRedirectSwitch.checked = features.autoRedirect !== false // 默认开启
+  for (const id of FEATURE_IDS) {
+    const input = document.getElementById(id) as HTMLInputElement | null
+    if (!input) continue
+    input.checked = states[id] !== false // 默认开启
 
-  // 监听开关变化
-  autoRedirectSwitch.addEventListener('change', e => {
-    chrome.storage.sync.set({
-      autoRedirect: (e.target as HTMLInputElement).checked
+    input.addEventListener('change', () => {
+      chrome.storage.sync.set({ [id]: input.checked })
+      if (id === 'mapSearch') {
+        // 右键菜单只能在 background 里增删,切换时通知它
+        chrome.runtime.sendMessage({ type: 'toggleMapSearch', enabled: input.checked })
+      }
     })
-  })
-
-  // 地图搜索功能
-  const mapSearchSwitch = document.getElementById('mapSearch') as HTMLInputElement
-  mapSearchSwitch.checked = features.mapSearch !== false // 默认开启
-
-  // 监听开关变化
-  mapSearchSwitch.addEventListener('change', e => {
-    chrome.storage.sync.set({
-      mapSearch: (e.target as HTMLInputElement).checked
-    })
-    // 通知 background script 更新菜单
-    chrome.runtime.sendMessage({
-      type: 'toggleMapSearch',
-      enabled: (e.target as HTMLInputElement).checked
-    })
-  })
+  }
 })

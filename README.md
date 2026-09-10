@@ -34,6 +34,17 @@
 - 可在弹窗中开启/关闭此功能
 - 支持快捷键操作
 
+### 3. 贴吧深色模式
+- 为百度贴吧网页版提供深色模式
+- 可在弹窗中开启/关闭此功能,切换即时生效,无需刷新页面
+- 移植自已合并的 tieba-dark 仓库
+
+### 4. ESC 返回
+- 在贴吧、X(Twitter)等站点按 ESC 返回上一页
+- 对 x.com 的弹层做了适配:页面自己用 ESC 关闭推文详情时(URL 已回退),扩展不会多退一页
+- 光标在输入框内时 ESC 交还页面,不触发返回
+- 启用站点列表见 `scripts/features/escBack/logic.ts`,新增站点只需追加一行
+
 ## 项目结构
 
 ```
@@ -44,21 +55,27 @@ project/
 │   ├── style.css           # 弹窗样式
 │   └── popup.ts            # 弹窗逻辑
 ├── scripts/
-│   ├── content.ts          # 内容脚本
+│   ├── content.ts          # 内容脚本(功能注册入口)
 │   ├── background.ts       # 后台脚本
 │   └── features/           # 功能模块目录
 │       ├── base.ts         # 功能基类
 │       ├── autoRedirect/   # 自动跳转功能
 │       │   ├── index.ts    # 功能实现
 │       │   └── rules.ts    # 跳转规则配置
-│       └── mapSearch/      # 地图搜索功能
-│           └── index.ts    # 功能实现
+│       ├── mapSearch/      # 地图搜索功能
+│       │   └── index.ts    # 功能实现
+│       ├── tiebaDark/      # 贴吧深色模式
+│       │   ├── index.ts    # 功能实现
+│       │   └── css.ts      # 深色样式(内嵌打包)
+│       └── escBack/        # ESC 返回功能
+│           ├── index.ts    # 功能实现
+│           └── logic.ts    # 站点匹配与守卫逻辑(带单元测试)
 ├── lib/                    # 公共库
 │   └── utils.ts            # 工具函数
-├── dist/                   # 构建输出目录
-│   ├── content.js          # 打包后的内容脚本
-│   └── background.js       # 打包后的后台脚本
-└── build.js                # 构建脚本
+└── dist/                   # 构建输出目录(rollup 产物)
+    ├── content.js          # 打包后的内容脚本
+    ├── background.js       # 打包后的后台脚本
+    └── popup.js            # 打包后的弹窗脚本
 ```
 
 ## 开发说明
@@ -72,16 +89,19 @@ project/
 1. 在 `features` 目录下创建新功能目录
 2. 实现功能类（继承 `Feature`）
 3. 根据功能类型在相应文件中注册：
-   - 网页交互功能 → `content.js`
-   - Chrome API 功能 → `background.js`
-4. 运行 `node build.js` 构建项目
-5. 重新加载扩展
+   - 网页交互功能 → `scripts/content.ts`（依赖完整 DOM 的功能加入 `domFeatures`，越早启动越好的加入 `instantFeatures`）
+   - Chrome API 功能 → `scripts/background.ts`
+4. 在 `popup/popup.ts` 的 `FEATURE_IDS` 中加入功能 id，并在 `popup/index.html` 添加开关
+5. 运行 `pnpm build` 构建项目
+6. 在 Chrome 扩展管理页面重新加载扩展
 
 ### 开发流程
-1. 修改源代码（`scripts/`、`lib/` 目录下的文件）
-2. 运行构建命令：
+1. 修改源代码（`scripts/`、`lib/`、`popup/` 目录下的文件）
+2. 运行测试与构建：
    ```bash
-   node build.js
+   pnpm test     # 单元测试(vitest)
+   pnpm build    # 构建(rollup)
+   pnpm dev      # 监听模式构建
    ```
 3. 在 Chrome 扩展管理页面点击"重新加载"图标
 4. 测试功能
