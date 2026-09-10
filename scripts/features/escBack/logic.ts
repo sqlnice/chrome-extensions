@@ -34,3 +34,15 @@ export function isEditableTarget(
 export function shouldGoBack(hrefBefore: string, hrefAfter: string): boolean {
   return hrefBefore === hrefAfter
 }
+
+/** ESC 的处置动作 */
+export type EscAction = 'back' | 'blur'
+
+/**
+ * 焦点在可编辑元素里时本次 ESC 只让它失焦(不返回):
+ * 若直接忽略,焦点会一直困在输入框里,后续 ESC 永远无反应;
+ * 让出焦点后,下一次 ESC 才执行返回
+ */
+export function decideEscAction(isEditable: boolean): EscAction {
+  return isEditable ? 'blur' : 'back'
+}

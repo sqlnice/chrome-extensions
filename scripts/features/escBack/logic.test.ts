@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { isEscBackSite, isEditableTarget, shouldGoBack, ESC_BACK_SITES } from './logic.ts'
+import {
+  isEscBackSite,
+  isEditableTarget,
+  shouldGoBack,
+  decideEscAction,
+  ESC_BACK_SITES
+} from './logic.ts'
 
 describe('isEscBackSite', () => {
   it('匹配配置内的站点', () => {
@@ -57,5 +63,15 @@ describe('shouldGoBack', () => {
 
   it('URL 已变说明 SPA 自己处理了 ESC(如关闭弹层),不应再返回', () => {
     expect(shouldGoBack('https://x.com/status/123', 'https://x.com/home')).toBe(false)
+  })
+})
+
+describe('decideEscAction', () => {
+  it('普通元素上按 ESC → 执行返回', () => {
+    expect(decideEscAction(false)).toBe('back')
+  })
+
+  it('输入框内按 ESC → 仅让输入框失焦,本次不返回(下一次 ESC 才返回)', () => {
+    expect(decideEscAction(true)).toBe('blur')
   })
 })
