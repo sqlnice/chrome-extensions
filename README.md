@@ -41,10 +41,11 @@
 
 ### 4. ESC 返回
 - 在贴吧、X(Twitter)等站点按 ESC 返回上一页
+- 贴吧图片预览打开时,ESC 先关闭预览而不是返回(再按一次才返回)
 - 对 x.com 的弹层做了适配:页面自己用 ESC 关闭推文详情时(URL 已回退),扩展不会多退一页
 - 光标在输入框内时,第一次按 ESC 让输入框失焦(不返回),下一次按 ESC 才返回——避免焦点困在输入框里导致 ESC 毫无反应
 - 注意:只能返回本标签页内的历史;直接新开的标签页(如中键打开的推文)没有上一页可退
-- 启用站点列表见 `scripts/features/escBack/logic.ts`,新增站点只需追加一行
+- 启用站点列表见 `scripts/features/escBack/logic.ts`,浮层选择器配置见 `scripts/features/escBack/index.ts`(OVERLAY_LAYERS),新增各自只需追加一行
 
 ## 项目结构
 

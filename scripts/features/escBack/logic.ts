@@ -36,13 +36,17 @@ export function shouldGoBack(hrefBefore: string, hrefAfter: string): boolean {
 }
 
 /** ESC 的处置动作 */
-export type EscAction = 'back' | 'blur'
+export type EscAction = 'back' | 'blur' | 'closeOverlay'
 
 /**
  * 焦点在可编辑元素里时本次 ESC 只让它失焦(不返回):
  * 若直接忽略,焦点会一直困在输入框里,后续 ESC 永远无反应;
- * 让出焦点后,下一次 ESC 才执行返回
+ * 让出焦点后,下一次 ESC 才执行返回。
+ * 有全屏浮层(贴吧图片预览等,关闭不改 URL,URL 判定法失效)时,
+ * 本次 ESC 只负责关浮层,不返回——x.com 改 URL 的弹层仍走 URL 判定。
  */
-export function decideEscAction(isEditable: boolean): EscAction {
-  return isEditable ? 'blur' : 'back'
+export function decideEscAction(isEditable: boolean, overlayOpen = false): EscAction {
+  if (isEditable) return 'blur'
+  if (overlayOpen) return 'closeOverlay'
+  return 'back'
 }

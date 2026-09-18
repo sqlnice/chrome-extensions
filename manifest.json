@@ -1,7 +1,7 @@
 {
   "name": "网页助手",
   "manifest_version": 3,
-  "version": "0.4",
+  "version": "0.5",
   "description": "提供自动跳转等多种网页辅助功能",
   "permissions": ["storage", "tabs", "activeTab", "contextMenus"],
   "action": {

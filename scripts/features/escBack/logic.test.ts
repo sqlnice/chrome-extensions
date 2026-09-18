@@ -74,4 +74,12 @@ describe('decideEscAction', () => {
   it('输入框内按 ESC → 仅让输入框失焦,本次不返回(下一次 ESC 才返回)', () => {
     expect(decideEscAction(true)).toBe('blur')
   })
+
+  it('有全屏浮层(如贴吧图片预览)开着时 → 关闭浮层,不返回(下一次 ESC 才返回)', () => {
+    expect(decideEscAction(false, true)).toBe('closeOverlay')
+  })
+
+  it('输入框优先于浮层:焦点在输入框且浮层开着 → 仍然只是失焦', () => {
+    expect(decideEscAction(true, true)).toBe('blur')
+  })
 })
